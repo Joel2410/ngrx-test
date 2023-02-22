@@ -1,0 +1,7 @@
+<div class="container">
+  <app-header></app-header>
+
+  <ng-container *ngIf="!loadingUsers">
+    <app-user-list [users]="users" (deleteUserEmit)="deleteUser($event)"></app-user-list>
+  </ng-container>
+</div>
