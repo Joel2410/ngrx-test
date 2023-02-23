@@ -1,16 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from 'src/app/shared/interfaces/user';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { UserModel } from 'src/app/shared/interfaces/user.model';
+import { selectUserList } from 'src/app/shared/state/selectors/users.selectors';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent {
-  @Input() public users: User[] | undefined;
-  @Output() deleteUserEmit = new EventEmitter<User>();
+export class UserListComponent implements OnInit {
+  public users$: Observable<ReadonlyArray<UserModel>> = new Observable();
 
-  public deleteUser(user: User): void {
-    this.deleteUserEmit.emit(user);
+  constructor(private store: Store) {}
+
+  public ngOnInit(): void {
+    this.users$ = this.store.select<ReadonlyArray<UserModel>>(selectUserList);
   }
 }

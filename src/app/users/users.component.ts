@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../shared/interfaces/user';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { UserModel } from '../shared/interfaces/user.model';
 import { UserService } from '../shared/services/user/user.service';
+import { UsersActions } from '../shared/state/actions/users.actions';
+import { selectLoading } from '../shared/state/selectors/users.selectors';
 
 @Component({
   selector: 'app-users',
@@ -8,32 +13,24 @@ import { UserService } from '../shared/services/user/user.service';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-  public users: User[] = [];
-  public loadingUsers = true;
+  public loadingUsers$: Observable<boolean> = new Observable();
 
-  constructor(private userService: UserService) {}
+  constructor(private store: Store, private userService: UserService) {}
 
   public ngOnInit(): void {
+    this.loadingUsers$ = this.store.select<boolean>(selectLoading);
+
     this.getUsers();
   }
 
   private getUsers(): void {
-    this.userService.getUsers().subscribe((data: any) => {
-      data.results.forEach((user: any) => {
-        this.users.push({
-          uuid: user.login.uuid,
-          name: `${user.name.first} ${user.name.last}`,
-          address: `${user.location.city}, ${user.location.state}, ${user.location.country}`,
-          email: user.email,
-          avatar: user.picture.large
-        });
-      });
+    this.store.dispatch(UsersActions.getUserList());
+    this.userService.getUsers().subscribe((users) => {
+      this.store.dispatch(UsersActions.getUserListSuccess({ users }));
     });
-    this.loadingUsers = false;
   }
 
-  public deleteUser(userToDele: User): void {
-    //this.userService.deleteUser(userToDele);
-    this.users = this.users.filter((user) => user.uuid !== userToDele.uuid);
+  public deleteUser(user: UserModel): void {
+    this.store.dispatch(UsersActions.removeUser({ uuid: user.uuid }));
   }
 }

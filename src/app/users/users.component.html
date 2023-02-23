@@ -1,7 +1,10 @@
-<div class="container">
+<div class="container mx-5">
   <app-header></app-header>
 
-  <ng-container *ngIf="!loadingUsers">
-    <app-user-list [users]="users" (deleteUserEmit)="deleteUser($event)"></app-user-list>
+  <ng-container *ngIf="!(loadingUsers$ | async)">
+    <app-user-list></app-user-list>
+  </ng-container>
+  <ng-container *ngIf="loadingUsers$ | async">
+    <h2>Cargando...</h2>
   </ng-container>
 </div>
