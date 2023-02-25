@@ -14,9 +14,16 @@ import { UsersComponent } from './users.component';
 import { HeaderComponent } from './components/header/header.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserComponent } from './components/user/user.component';
+import { UserFormComponent } from './components/user-form/user-form.component';
 
 @NgModule({
-  declarations: [UsersComponent, HeaderComponent, UserListComponent, UserComponent],
+  declarations: [
+    UsersComponent,
+    HeaderComponent,
+    UserListComponent,
+    UserComponent,
+    UserFormComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -3,7 +3,12 @@ import { createReducer, on } from '@ngrx/store';
 import { UsersActions } from '../actions/users.actions';
 import { UsersStoreModel } from '../../interfaces/users-store.model';
 
-export const initialState: UsersStoreModel = { loading: false, users: [] };
+export const initialState: UsersStoreModel = {
+  loading: false,
+  isEdit: false,
+  userToEdit: undefined,
+  users: []
+};
 
 export const usersReducer = createReducer(
   initialState,
@@ -19,5 +24,14 @@ export const usersReducer = createReducer(
   on(UsersActions.addUserSuccess, (state, { user }) => {
     if (state.users.find((findUser) => findUser.uuid === user.uuid)) return state;
     return { ...state, users: [...state.users, user] };
+  }),
+  on(UsersActions.updateUser, (state, { user }) => {
+    return { ...state, isEdit: true, userToEdit: user };
+  }),
+  on(UsersActions.updateUserSuccess, (state, { user }) => {
+    let index = state.users.indexOf(user);
+    const users = [...state.users];
+    users.splice(index, 1, user);
+    return { ...state, isEdit: false, users };
   })
 );
