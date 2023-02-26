@@ -16,6 +16,6 @@ export class UserListComponent implements OnInit {
   constructor(private store: Store) {}
 
   public ngOnInit(): void {
-    this.users$ = this.store.select<ReadonlyArray<UserModel>>(selectUserList);
+    this.users$ = this.store.select(selectUserList);
   }
 }

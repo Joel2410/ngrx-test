@@ -19,7 +19,7 @@ export class UserComponent implements OnInit {
   constructor(private store: Store) {}
 
   public ngOnInit(): void {
-    this.isEdit$ = this.store.select<boolean>(selectIsEdit);
+    this.isEdit$ = this.store.select(selectIsEdit);
   }
 
   public editUser(): void {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 
-import { UserService } from 'src/app/shared/services/user/user.service';
 import { UsersActions } from 'src/app/shared/state/actions/users.actions';
 
 @Component({
@@ -13,7 +12,7 @@ import { UsersActions } from 'src/app/shared/state/actions/users.actions';
 export class HeaderComponent implements OnInit {
   public items: MenuItem[] = [];
 
-  constructor(private store: Store, private userService: UserService) {}
+  constructor(private store: Store) {}
 
   public ngOnInit(): void {
     this.items = [
@@ -34,8 +33,6 @@ export class HeaderComponent implements OnInit {
   }
 
   public addUser(): void {
-    this.userService.getUsers(1).subscribe((users) => {
-      this.store.dispatch(UsersActions.addUserSuccess({ user: users[0] }));
-    });
+    this.store.dispatch(UsersActions.addUser());
   }
 }

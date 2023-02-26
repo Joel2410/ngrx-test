@@ -29,9 +29,15 @@ export const usersReducer = createReducer(
     return { ...state, isEdit: true, userToEdit: user };
   }),
   on(UsersActions.updateUserSuccess, (state, { user }) => {
-    let index = state.users.indexOf(user);
     const users = [...state.users];
-    users.splice(index, 1, user);
-    return { ...state, isEdit: false, users };
+    if (state.userToEdit) {
+      const index = users.indexOf(state.userToEdit);
+      users.splice(index, 1, user);
+    }
+
+    return { ...state, isEdit: false, userToEdit: undefined, users };
+  }),
+  on(UsersActions.updateUserCancel, (state) => {
+    return { ...state, isEdit: false, userToEdit: undefined };
   })
 );
